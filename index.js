@@ -30,6 +30,8 @@ async function run() {
         await client.connect();
 
         const productCollection = client.db("TechnologyDB").collection("Products")
+        const myCartCollection = client.db("TechnologyDB").collection("MyCarts")
+
 
         // add product related API 
         app.get('/products', async(req, res) => {
@@ -47,11 +49,11 @@ async function run() {
         })
 
         app.get('/products/:brand_name/:_id', async(req, res) => {
-            const brandName = req.params.brand_name
-            const filter1 = {brand_name: brandName}
             const id = req.params._id
             const filter = {_id : new ObjectId(id)}
-            const result = await productCollection.findOne( filter1, filter)
+            const brandName = req.params.brand_name
+            const filter1 = {brand_name: brandName}
+            const result = await productCollection.findOne(filter, filter1)
             res.send(result)
         })
 
@@ -62,6 +64,13 @@ async function run() {
         })
 
         
+        // my cart related API
+        app.post('/carts', async(req, res) => {
+            const newCart = req.body
+            const result = await myCartCollection.insertOne(newCart)
+            res.send(result)
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
