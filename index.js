@@ -42,7 +42,6 @@ async function run() {
 
         app.get('/products/:brand_name', async(req, res) => {
             const brandName = req.params.brand_name
-            console.log(brandName);
             const filter = {brand_name: brandName}
             const result = await productCollection.find(filter).toArray()
             res.send(result)
@@ -65,6 +64,12 @@ async function run() {
 
         
         // my cart related API
+        app.get('/carts', async(req, res) => {
+            const cursor = myCartCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
         app.post('/carts', async(req, res) => {
             const newCart = req.body
             const result = await myCartCollection.insertOne(newCart)
