@@ -49,11 +49,31 @@ async function run() {
 
         app.get('/products/:brand_name/:_id', async(req, res) => {
             const id = req.params._id
-            console.log(id);
             const filter = {_id : new ObjectId(id)}
             const brandName = req.params.brand_name
             const filter1 = {brand_name: brandName}
             const result = await productCollection.findOne(filter, filter1)
+            res.send(result)
+        })
+
+        app.put('/products/:brand_name/:_id', async(req, res) => {
+            const id = req.params._id
+            const filter = {_id : new ObjectId(id)}
+            const brandName = req.params.brand_name
+            const filter1 = {brand_name: brandName}
+            const option = {upsert: true}
+            const updatedProduct = req.body
+            const product = {
+                $set: {
+                    image: updatedProduct.image,
+                    name: updatedProduct.name,
+                    brand_name: updatedProduct.brand_name, 
+                    type: updatedProduct.type,
+                    price: updatedProduct.price,
+                    rating: updatedProduct.rating
+                }
+            }
+            const result = await productCollection.updateOne(filter, product, option)
             res.send(result)
         })
 
