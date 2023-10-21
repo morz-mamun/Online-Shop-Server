@@ -49,6 +49,7 @@ async function run() {
 
         app.get('/products/:brand_name/:_id', async(req, res) => {
             const id = req.params._id
+            console.log(id);
             const filter = {_id : new ObjectId(id)}
             const brandName = req.params.brand_name
             const filter1 = {brand_name: brandName}
@@ -70,15 +71,28 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/carts/:_id', async(req, res) => {
+            const id = req.params._id
+            console.log(id);
+            const filter = {_id : id}
+            const cursor = await myCartCollection.findOne(filter)
+        
+            res.send(cursor)
+        })
+
+
+
         app.post('/carts', async(req, res) => {
             const newCart = req.body
             const result = await myCartCollection.insertOne(newCart)
             res.send(result)
         })
 
-        app.delete('/carts/:id', async(req, res) => {
-            const id = req.params.id
-            const filter = {_id : new ObjectId(id)}
+        
+        app.delete('/carts/:_id', async(req, res) => {
+            const id = req.params._id
+            console.log(id);
+            const filter = {_id : id}
             const result = await myCartCollection.deleteOne(filter)
             res.send(result)
         })
